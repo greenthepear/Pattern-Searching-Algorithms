@@ -31,6 +31,8 @@ func patternAlgorithmRead(smallerString string, biggerString string, algorithm i
 		indexes = sunday(smallerString, biggerString)
 	case 2:
 		indexes = kmp(smallerString, biggerString)
+	case 3:
+		indexes = rabinkarp(smallerString, biggerString)
 	default:
 		fmt.Printf("Bad input!\n")
 		return
@@ -58,5 +60,10 @@ func main() {
 	patternAlgorithmRead(toFindString, baseString, 1)
 	fmt.Printf("\nKMP:\n")
 	patternAlgorithmRead(toFindString, baseString, 2)
+	fmt.Printf("\nRabin-Karp:\n")
+	patternAlgorithmRead(toFindString, baseString, 3)
 
+	fmt.Printf("Hash test 'abr': %d\n", genHash("abr", 256, 101))
+	fmt.Printf("Hash test 'bra': %d\n", genHash("bra", 256, 101))
+	fmt.Printf("rollHash test 'bra': %d\n", rollHash(genHash("abr", 256, 101), 'a', 'a', 256, 101))
 }
