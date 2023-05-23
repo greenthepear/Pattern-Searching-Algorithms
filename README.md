@@ -1,3 +1,2 @@
 # Pattern-Searching-Algorithms
-Read me but in vim
-Read me?
+All algorithm functions return a slice of indexes where the pattern (smallerString) was found (in biggerString). Use patternAlgorithmRead to nicely display the search

@@ -7,12 +7,11 @@ import (
 func bruteforce(smallerString string, biggerString string, printInfo bool) []int {
 	sLen, bLen := len(smallerString), len(biggerString)
 	rSlice := make([]int, 0)
+
 	if sLen > bLen {
-		if printInfo {
-			fmt.Printf("Wrong sizes!\n")
-		}
 		return rSlice
 	}
+
 	foundAny := false
 
 	for bIndex := range biggerString {

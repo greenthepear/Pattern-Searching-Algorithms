@@ -19,23 +19,20 @@ func rabinkarp(smallerString string, biggerString string) []int {
 	sLen, bLen := len(smallerString), len(biggerString)
 	rSlice := make([]int, 0)
 
+	if sLen > bLen {
+		return rSlice
+	}
+
 	const base = 256
 	const primeMod = 101
 
 	hash := genHash(smallerString, base, primeMod)
 	subStringHash := genHash(biggerString[0:sLen], base, primeMod)
 
-	var power uint64 = 1
-	for range smallerString {
-		power = (power * base) % primeMod
-	}
-
 	i := 0
 	for i+sLen < bLen {
-		if hash == subStringHash {
-			if smallerString == biggerString[i:i+sLen] {
-				rSlice = append(rSlice, i)
-			}
+		if hash == subStringHash && smallerString == biggerString[i:i+sLen] {
+			rSlice = append(rSlice, i)
 		}
 
 		i++
