@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 func genHash(str string, base uint64, primeMod uint64) uint64 {
 	var r uint64 = 0
 	for _, c := range str {
@@ -10,11 +8,28 @@ func genHash(str string, base uint64, primeMod uint64) uint64 {
 	return r
 }
 
-func rollHash(oldHash uint64, oldChar byte, newChar byte, base uint64, primeMod uint64) uint64 {
-	//fmt.Printf("[(%d + %d - %d * [(%d mod %d) * %d] mod %d) * %d + %d] mod %d", oldHash, primeMod, int(oldChar), base, primeMod, base, primeMod, base, int(newChar), primeMod)
-	fmt.Printf("ASCII of %c = %d\n", newChar, uint64(newChar))
-	return ((oldHash+primeMod-uint64(oldChar)*((base%primeMod)*base)%primeMod)*base + uint64(newChar)) % primeMod
+func power(base, exp, mod uint64) uint64 {
+	result := uint64(1)
+	for exp > 0 {
+		if exp%2 == 1 {
+			result = (result * base) % mod
+		}
+		base = (base * base) % mod
+		exp >>= 1
+	}
+	return result
 }
+
+func rollHash(oldHash uint64, base uint64, primeMod uint64, subtractedChar byte, addedChar byte, strLen int) uint64 {
+	// Subtract the contribution of the removed character from the original hash
+	oldHash = (oldHash - uint64(subtractedChar)*power(base, uint64(strLen-1), primeMod)) % primeMod
+
+	// Add the contribution of the added character to the updated hash
+	newHash := (oldHash*base + uint64(addedChar)) % primeMod
+	return newHash
+}
+
+// Helper function to calculate base^exp % mod efficiently
 
 func rabinkarp(smallerString string, biggerString string) []int {
 	sLen, bLen := len(smallerString), len(biggerString)
@@ -38,16 +53,13 @@ func rabinkarp(smallerString string, biggerString string) []int {
 				rSlice = append(rSlice, i)
 			}
 		}
-		//fmt.Printf("\n\nCurrent hash of %s: %d (s hash: %d)", biggerString[i:i+sLen], subStringHash, hash)
-		//fmt.Printf("\nRolling %d, removing %c, adding %c", subStringHash, biggerString[i-1], biggerString[i+sLen-1])
-		i++
-		subStringHash = (subStringHash*base + uint64(biggerString[i])) % primeMod
-		if i >= sLen {
-			subStringHash -= power * uint64(biggerString[i-sLen]) % primeMod
-		}
 
-		//subStringHash = rollHash(subStringHash, biggerString[i], biggerString[i+sLen], base, primeMod) //problem probably here, rewrite, OB1 errors galore
-		//fmt.Printf("\tNew hash: %d", subStringHash)
+		i++
+		//oldSubstringHash := subStringHash
+		subStringHash = genHash(biggerString[i:i+sLen], base, primeMod)
+		//fmt.Printf("\nOldS\tNewS\tOldH\tNewH\tDiff\n%s\t%s\t%d\t%d\t%d\n",
+		//	biggerString[i-1:i-1+sLen], biggerString[i:i+sLen],
+		//	oldSubstringHash, subStringHash, oldSubstringHash-subStringHash)
 	}
 
 	//Checking last place as to avoid more checks in the loop
