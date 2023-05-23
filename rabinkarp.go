@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 func genHash(str string, base uint64, primeMod uint64) uint64 {
 	var r uint64 = 0
 	for _, c := range str {
@@ -8,28 +10,10 @@ func genHash(str string, base uint64, primeMod uint64) uint64 {
 	return r
 }
 
-func power(base, exp, mod uint64) uint64 {
-	result := uint64(1)
-	for exp > 0 {
-		if exp%2 == 1 {
-			result = (result * base) % mod
-		}
-		base = (base * base) % mod
-		exp >>= 1
-	}
-	return result
-}
-
 func rollHash(oldHash uint64, base uint64, primeMod uint64, subtractedChar byte, addedChar byte, strLen int) uint64 {
-	// Subtract the contribution of the removed character from the original hash
-	oldHash = (oldHash - uint64(subtractedChar)*power(base, uint64(strLen-1), primeMod)) % primeMod
-
-	// Add the contribution of the added character to the updated hash
-	newHash := (oldHash*base + uint64(addedChar)) % primeMod
-	return newHash
+	oldHash = (oldHash + primeMod - uint64(subtractedChar)*uint64(math.Pow(float64(base), float64(strLen-1)))%primeMod) % primeMod
+	return (oldHash*base + uint64(addedChar)) % primeMod
 }
-
-// Helper function to calculate base^exp % mod efficiently
 
 func rabinkarp(smallerString string, biggerString string) []int {
 	sLen, bLen := len(smallerString), len(biggerString)
@@ -55,11 +39,7 @@ func rabinkarp(smallerString string, biggerString string) []int {
 		}
 
 		i++
-		//oldSubstringHash := subStringHash
-		subStringHash = genHash(biggerString[i:i+sLen], base, primeMod)
-		//fmt.Printf("\nOldS\tNewS\tOldH\tNewH\tDiff\n%s\t%s\t%d\t%d\t%d\n",
-		//	biggerString[i-1:i-1+sLen], biggerString[i:i+sLen],
-		//	oldSubstringHash, subStringHash, oldSubstringHash-subStringHash)
+		subStringHash = rollHash(subStringHash, base, primeMod, biggerString[i-1], biggerString[i-1+sLen], sLen)
 	}
 
 	//Checking last place as to avoid more checks in the loop
