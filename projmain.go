@@ -35,7 +35,7 @@ func patternAlgorithmRead(smallerString string, biggerString string, algorithm i
 	var indexes []int
 	switch algorithm {
 	case 0:
-		indexes = bruteforce(smallerString, biggerString, false)
+		indexes = bruteforce(smallerString, biggerString)
 	case 1:
 		indexes = sunday(smallerString, biggerString)
 	case 2:
@@ -105,6 +105,16 @@ func readLinesFromFile(filepath string, numLines int) (string, error) {
 	return lines, nil
 }
 
+func testAllFileLines(numLines int, filepath string, smallerString string) {
+	biggerString, err := readLinesFromFile(filepath, numLines)
+	if err != nil {
+		fmt.Printf("Error:%s", err)
+		return
+	}
+
+	testAll(smallerString, biggerString)
+}
+
 func benchmark(maxLines int, times int, smallerString string, filepath string) {
 	timeElapsed := make([]time.Duration, 6)
 	timeElapsedStart := make([]time.Time, 6)
@@ -122,7 +132,7 @@ func benchmark(maxLines int, times int, smallerString string, filepath string) {
 		for iavg := 0; iavg < times; iavg++ {
 			//Bruteforce
 			timeElapsedStart[0] = time.Now()
-			indexes[0] = bruteforce(smallerString, biggerString, false)
+			indexes[0] = bruteforce(smallerString, biggerString)
 			timeElapsed[0] = time.Since(timeElapsedStart[0])
 			timeElapsedTotal[0] += timeElapsed[0]
 
@@ -171,9 +181,14 @@ func main() {
 	//baseString := "abracadabra"
 	//pattern := "he"
 	filepath := "hhgttg.txt"
-	pattern := "Orbiting this at a distance of roughly ninety-two  million  miles"
+	pattern := "th"
+	//text := "ththththththth"
 
 	//testAll(pattern, text)
 
-	benchmark(500, 50, pattern, filepath)
+	//testAll(pattern, text)
+
+	testAllFileLines(50, filepath, pattern)
+
+	//benchmark(500, 50, pattern, filepath)
 }
