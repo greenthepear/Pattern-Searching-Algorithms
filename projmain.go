@@ -35,6 +35,8 @@ func patternAlgorithmRead(smallerString string, biggerString string, algorithm i
 		indexes = rabinkarp(smallerString, biggerString)
 	case 4:
 		indexes = fsm(smallerString, biggerString)
+	case 5:
+		indexes = gusfieldz(smallerString, biggerString)
 	default:
 		fmt.Printf("Bad input!\n")
 		return
@@ -57,6 +59,7 @@ func main() {
 	//baseString := "abracadabra"
 	toFindString := "he"
 	//bruteforce(toFindString, baseString, true)
+	fmt.Printf("\nBruteforce:\n")
 	patternAlgorithmRead(toFindString, baseString, 0)
 	fmt.Printf("\nSunday:\n")
 	patternAlgorithmRead(toFindString, baseString, 1)
@@ -66,7 +69,9 @@ func main() {
 	patternAlgorithmRead(toFindString, baseString, 3)
 	fmt.Printf("\nFSM:\n")
 	patternAlgorithmRead(toFindString, baseString, 4)
-	//fmt.Printf("Hash test 'abr': %d\n", genHash("abr", 256, 101))
-	//fmt.Printf("Hash test 'bra': %d\n", genHash("bra", 256, 101))
-	//fmt.Printf("rollHash test 'bra': %d\n", rollHash(genHash("abr", 256, 101), 'a', 'a', 256, 101))
+	fmt.Printf("\nGusfield Z:\n")
+	patternAlgorithmRead(toFindString, baseString, 5)
+
+	//zTestString := "aabaacd"
+	//fmt.Printf("\nZ test for '%s': %v", zTestString, genZslice(zTestString))
 }
