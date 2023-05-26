@@ -115,13 +115,13 @@ func testAllFileLines(numLines int, filepath string, smallerString string) {
 	testAll(smallerString, biggerString)
 }
 
-func benchmark(maxLines int, times int, smallerString string, filepath string) {
+func benchmark(minLines int, maxLines int, iterator int, times int, smallerString string, filepath string) {
 	timeElapsed := make([]time.Duration, 6)
 	timeElapsedStart := make([]time.Time, 6)
 	indexes := make([][]int, 6)
 
-	fmt.Printf("Lines\tBf\tSd\tKMP\tRK\tFSM\tZ\n")
-	for ilines := 12; ilines < maxLines; ilines += 3 {
+	fmt.Printf("Lines\tBf\tSd\tKMP\tRK\tFSM\tZ")
+	for ilines := minLines; ilines < maxLines; ilines += iterator {
 		biggerString, err := readLinesFromFile(filepath, ilines)
 		if err != nil {
 			fmt.Printf("Error:%s", err)
@@ -156,15 +156,15 @@ func benchmark(maxLines int, times int, smallerString string, filepath string) {
 
 			//FSM
 			timeElapsedStart[4] = time.Now()
-			indexes[4] = rabinkarp(smallerString, biggerString)
+			indexes[4] = fsm(smallerString, biggerString)
 			timeElapsed[4] = time.Since(timeElapsedStart[4])
 			timeElapsedTotal[4] += timeElapsed[4]
 
 			//Z
 			timeElapsedStart[5] = time.Now()
-			indexes[5] = rabinkarp(smallerString, biggerString)
-			timeElapsed[5] = time.Since(timeElapsedStart[3])
-			timeElapsedTotal[5] += timeElapsed[3]
+			indexes[5] = gusfieldz(smallerString, biggerString)
+			timeElapsed[5] = time.Since(timeElapsedStart[5])
+			timeElapsedTotal[5] += timeElapsed[5]
 		}
 
 		fmt.Printf("\n%d\t", ilines)
@@ -181,14 +181,14 @@ func main() {
 	//baseString := "abracadabra"
 	//pattern := "he"
 	filepath := "hhgttg.txt"
-	pattern := "th"
+	pattern := "This is not her story."
 	//text := "ththththththth"
 
 	//testAll(pattern, text)
 
 	//testAll(pattern, text)
 
-	testAllFileLines(50, filepath, pattern)
+	//testAllFileLines(50, filepath, pattern)
 
-	//benchmark(500, 50, pattern, filepath)
+	benchmark(200, 4000, 5, 20, pattern, filepath)
 }
