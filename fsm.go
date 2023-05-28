@@ -60,3 +60,23 @@ func fsm(smallerString string, biggerString string) []int {
 
 	return rSlice
 }
+
+func fsmPrecomp(smallerString string, biggerString string, matrix [][]int) []int {
+	sLen, bLen := len(smallerString), len(biggerString)
+	rSlice := make([]int, 0)
+
+	if sLen > bLen {
+		return rSlice
+	}
+
+	i, state := 0, 0
+	for i < bLen {
+		state = matrix[state][biggerString[i]]
+		if state == sLen {
+			rSlice = append(rSlice, i-sLen+1)
+		}
+		i++
+	}
+
+	return rSlice
+}

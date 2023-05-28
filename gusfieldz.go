@@ -13,11 +13,9 @@ func genZslice(str string) []int {
 			firstFlag = true
 		}
 
-		j := i - l
-
 		if !firstFlag {
-			if rSlice[j] < r-i+1 {
-				rSlice[i] = rSlice[j]
+			if rSlice[i-l] < r-i+1 {
+				rSlice[i] = rSlice[i-l]
 				continue
 			}
 

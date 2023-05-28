@@ -116,11 +116,13 @@ func testAllFileLines(numLines int, filepath string, smallerString string) {
 }
 
 func benchmark(minLines int, maxLines int, iterator int, times int, smallerString string, filepath string) {
-	timeElapsed := make([]time.Duration, 6)
-	timeElapsedStart := make([]time.Time, 6)
-	indexes := make([][]int, 6)
+	timeElapsed := make([]time.Duration, 7)
+	timeElapsedStart := make([]time.Time, 7)
+	indexes := make([][]int, 7)
 
-	fmt.Printf("Lines\tBf\tSd\tKMP\tRK\tFSM\tZ")
+	mat := genFSMmatrix(smallerString)
+
+	fmt.Printf("Lines\tBf\tSd\tKMP\tRK\tFSM\tZ\tFSMprecomp")
 	for ilines := minLines; ilines < maxLines; ilines += iterator {
 		biggerString, err := readLinesFromFile(filepath, ilines)
 		if err != nil {
@@ -128,7 +130,7 @@ func benchmark(minLines int, maxLines int, iterator int, times int, smallerStrin
 			return
 		}
 
-		timeElapsedTotal := make([]time.Duration, 6)
+		timeElapsedTotal := make([]time.Duration, 7)
 		for iavg := 0; iavg < times; iavg++ {
 			//Bruteforce
 			timeElapsedStart[0] = time.Now()
@@ -165,6 +167,12 @@ func benchmark(minLines int, maxLines int, iterator int, times int, smallerStrin
 			indexes[5] = gusfieldz(smallerString, biggerString)
 			timeElapsed[5] = time.Since(timeElapsedStart[5])
 			timeElapsedTotal[5] += timeElapsed[5]
+
+			//FSMPrecomp
+			timeElapsedStart[6] = time.Now()
+			indexes[6] = fsmPrecomp(smallerString, biggerString, mat)
+			timeElapsed[6] = time.Since(timeElapsedStart[6])
+			timeElapsedTotal[6] += timeElapsed[6]
 		}
 
 		fmt.Printf("\n%d\t", ilines)
@@ -181,7 +189,7 @@ func main() {
 	//baseString := "abracadabra"
 	//pattern := "he"
 	filepath := "hhgttg.txt"
-	pattern := "This is not her story."
+	pattern := "Who said anything about panicking?\"  snapped  Arthur.  \"This  is\nstill  just  the  culture  shock. You wait till I've settled down\ninto the  situation  and  found  my  bearings.  Then  I'll  start\npanicking."
 	//text := "ththththththth"
 
 	//testAll(pattern, text)
@@ -190,5 +198,5 @@ func main() {
 
 	//testAllFileLines(50, filepath, pattern)
 
-	benchmark(200, 4000, 5, 20, pattern, filepath)
+	benchmark(200, 4000, 5, 50, pattern, filepath)
 }
