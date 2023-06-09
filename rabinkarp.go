@@ -1,18 +1,19 @@
 package main
 
-import "math"
-
-func genHash(str string, base uint64, primeMod uint64) uint64 {
-	var r uint64 = 0
+func genHash(str string, base int64, primeMod int64) int64 {
+	var r int64 = 0
 	for _, c := range str {
-		r = (r*base + uint64(c)) % primeMod
+		r = (r*base + int64(c)) % primeMod
 	}
 	return r
 }
 
-func rollHash(oldHash uint64, base uint64, primeMod uint64, subtractedChar byte, addedChar byte, strLen int, pow uint64) uint64 {
-	oldHash = (oldHash + primeMod - uint64(subtractedChar)*pow%primeMod) % primeMod
-	return (oldHash*base + uint64(addedChar)) % primeMod
+func rollHash(oldHash int64, base int64, primeMod int64, subtractedChar byte, addedChar byte, strLen int, pow int64) int64 {
+	newHash := (base*(oldHash-int64(subtractedChar)*pow) + int64(addedChar)) % primeMod
+	if newHash < 0 {
+		newHash += primeMod
+	}
+	return newHash
 }
 
 func rabinkarp(smallerString string, biggerString string) []int {
@@ -29,7 +30,11 @@ func rabinkarp(smallerString string, biggerString string) []int {
 	hash := genHash(smallerString, base, primeMod)
 	subStringHash := genHash(biggerString[0:sLen], base, primeMod)
 
-	pow := uint64(math.Pow(float64(base), float64(sLen-1)))
+	//pow := int64(math.Pow(float64(base), float64(sLen-1)))
+	var pow int64 = 1
+	for i := 0; i < sLen-1; i++ {
+		pow = (pow * base) % primeMod
+	}
 
 	i := 0
 	for i+sLen < bLen {

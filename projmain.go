@@ -187,16 +187,16 @@ func benchmark(minLines int, maxLines int, iterator int, times int, smallerStrin
 func main() {
 	//text := "The King's Indian Defence (or KID) is a common chess opening. It is defined by the following moves: 1. d4 Nf6 2. c4 g6. Black intends to follow up with 3...Bg7 and 4...d6 (the Grünfeld Defence arises when Black plays 3...d5 instead and is considered a separate opening). White's major third move options are 3.Nc3, 3.Nf3 or 3.g3, with both the King's Indian and Grünfeld playable against these moves. The Encyclopaedia of Chess Openings classifies the King's Indian Defence under the codes E60 through E99."
 	//baseString := "abracadabra"
-	//pattern := "he"
+	pattern := "himself"
 	filepath := "hhgttg.txt"
-	pattern := "Who said anything about panicking?\"  snapped  Arthur.  \"This  is\nstill  just  the  culture  shock. You wait till I've settled down\ninto the  situation  and  found  my  bearings.  Then  I'll  start\npanicking."
+	//pattern := "Who said anything about panicking?\"  snapped  Arthur.  \"This  is\nstill  just  the  culture  shock. You wait till I've settled down\ninto the  situation  and  found  my  bearings.  Then  I'll  start\npanicking."
 	//text := "ththththththth"
 
 	//testAll(pattern, text)
 
 	//testAll(pattern, text)
 
-	//testAllFileLines(50, filepath, pattern)
+	testAllFileLines(1000, filepath, pattern)
 
-	benchmark(200, 4000, 5, 50, pattern, filepath)
+	//benchmark(200, 4000, 5, 50, pattern, filepath)
 }
