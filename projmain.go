@@ -198,5 +198,5 @@ func main() {
 
 	testAllFileLines(1000, filepath, pattern)
 
-	//benchmark(200, 4000, 5, 50, pattern, filepath)
+	//benchmark(200, 2000, 5, 50, pattern, filepath)
 }

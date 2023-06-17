@@ -19,7 +19,7 @@ func sunday(smallerString string, biggerString string) []int {
 		}
 
 		if pos+sLen < bLen && !strings.ContainsRune(smallerString, rune(biggerString[pos+sLen])) {
-			pos += sLen
+			pos += sLen + 1
 		} else {
 			pos++
 		}
